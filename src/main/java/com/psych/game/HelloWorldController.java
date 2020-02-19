@@ -47,6 +47,12 @@ public class HelloWorldController {
                 GameMode.IS_THIS_A_FACT
         ));
 
+        questionRepository.save(new Question(
+                "How far can Luffy stretch?",
+                "56 Gomu Gomus",
+                GameMode.IS_THIS_A_FACT
+        ));
+
         return "populated";
     }
 
@@ -56,7 +62,7 @@ public class HelloWorldController {
     }
 
     @GetMapping("/question/{id}")
-    public Question getQuestionById(@PathVariable(name="id") Long id) {
+    public Question getQuestionById(@PathVariable(name = "id") Long id) {
         return questionRepository.findById(id).orElseThrow();
     }
 
@@ -66,7 +72,7 @@ public class HelloWorldController {
     }
 
     @GetMapping("/player/{id}")
-    public Player getPlayerById(@PathVariable(name="id") Long id) {
+    public Player getPlayerById(@PathVariable(name = "id") Long id) {
         return playerRepository.findById(id).orElseThrow();
     }
 

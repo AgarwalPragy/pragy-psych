@@ -48,7 +48,7 @@ public class Game extends Auditable {
     @Enumerated(EnumType.STRING)
     @Getter
     @Setter
-    private GameStatus gameStatus;
+    private GameStatus gameStatus = GameStatus.PLAYERS_JOINING;
 
     @ManyToMany
     @Getter

@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 public class EllenAnswer extends Auditable {
     @ManyToOne
     @NotNull
+    @Getter
+    @Setter
     private Question question;
 
     @Getter
