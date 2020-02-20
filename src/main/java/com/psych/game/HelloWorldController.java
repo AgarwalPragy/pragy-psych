@@ -1,8 +1,10 @@
 package com.psych.game;
 
+import com.psych.game.model.Game;
 import com.psych.game.model.GameMode;
 import com.psych.game.model.Player;
 import com.psych.game.model.Question;
+import com.psych.game.repositories.GameRepository;
 import com.psych.game.repositories.PlayerRepository;
 import com.psych.game.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class HelloWorldController {
     private PlayerRepository playerRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private GameRepository gameRepository;
 
     @GetMapping("/")
     public String hello() {
@@ -28,6 +32,10 @@ public class HelloWorldController {
 
     @GetMapping("/populate")
     public String populateDB() {
+        playerRepository.deleteAll();
+        questionRepository.deleteAll();
+        gameRepository.deleteAll();
+
         Player luffy = new Player.Builder()
                 .alias("Monkey D. Luffy")
                 .email("luffy@interviewbit.com")
@@ -40,6 +48,12 @@ public class HelloWorldController {
                 .saltedHashedPassword("poneglyph")
                 .build();
         playerRepository.save(robin);
+
+        Game game = new Game();
+        game.setGameMode(GameMode.IS_THIS_A_FACT);
+        game.setLeader(luffy);
+        game.getPlayers().add(luffy);
+        gameRepository.save(game);
 
         questionRepository.save(new Question(
                 "What is the most important Poneglyph",
@@ -74,6 +88,16 @@ public class HelloWorldController {
     @GetMapping("/player/{id}")
     public Player getPlayerById(@PathVariable(name = "id") Long id) {
         return playerRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/games")
+    public List<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
+
+    @GetMapping("/game/{id}")
+    public Game getGameById(@PathVariable(name = "id") Long id) {
+        return gameRepository.findById(id).orElseThrow();
     }
 
     // Games

@@ -1,5 +1,8 @@
 package com.psych.game.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
@@ -29,11 +32,13 @@ public class Player extends User {
     private String picURL;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     @Getter
     @Setter
     private Stat stat = new Stat();
 
     @ManyToMany(mappedBy = "players")
+    @JsonIdentityReference
     @Getter
     @Setter
     private Set<Game> games = new HashSet<>();

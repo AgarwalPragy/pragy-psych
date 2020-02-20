@@ -1,5 +1,6 @@
 package com.psych.game.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Table(name = "contentwriters")
 public class ContentWriter extends Employee {
     @ManyToMany(cascade = CascadeType.PERSIST)
+    @JsonIdentityReference
     @Getter
     @Setter
     Set<Question> editedQuestions = new HashSet<>();
