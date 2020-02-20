@@ -1,12 +1,11 @@
-package com.psych.game;
+package com.psych.game.controller;
 
-import com.psych.game.model.Game;
-import com.psych.game.model.GameMode;
-import com.psych.game.model.Player;
-import com.psych.game.model.Question;
+import com.psych.game.model.*;
 import com.psych.game.repositories.GameRepository;
 import com.psych.game.repositories.PlayerRepository;
 import com.psych.game.repositories.QuestionRepository;
+import com.psych.game.repositories.UserRepository;
+import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/dev-test")
-public class HelloWorldController {
+public class DevTestController {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/")
     public String hello() {
@@ -32,9 +34,13 @@ public class HelloWorldController {
 
     @GetMapping("/populate")
     public String populateDB() {
+        for(Player player: playerRepository.findAll()) {
+            player.getGames().clear();
+            playerRepository.save(player);
+        }
+        gameRepository.deleteAll();
         playerRepository.deleteAll();
         questionRepository.deleteAll();
-        gameRepository.deleteAll();
 
         Player luffy = new Player.Builder()
                 .alias("Monkey D. Luffy")
@@ -88,6 +94,16 @@ public class HelloWorldController {
     @GetMapping("/player/{id}")
     public Player getPlayerById(@PathVariable(name = "id") Long id) {
         return playerRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable(name = "id") Long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
     @GetMapping("/games")
