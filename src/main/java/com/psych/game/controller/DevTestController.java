@@ -1,10 +1,7 @@
 package com.psych.game.controller;
 
 import com.psych.game.model.*;
-import com.psych.game.repositories.GameRepository;
-import com.psych.game.repositories.PlayerRepository;
-import com.psych.game.repositories.QuestionRepository;
-import com.psych.game.repositories.UserRepository;
+import com.psych.game.repositories.*;
 import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +23,8 @@ public class DevTestController {
     private GameRepository gameRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoundRepository roundRepository;
 
     @GetMapping("/")
     public String hello() {
@@ -106,18 +105,6 @@ public class DevTestController {
         return userRepository.findById(id).orElseThrow();
     }
 
-    @GetMapping("/games")
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
-    }
-
-    @GetMapping("/game/{id}")
-    public Game getGameById(@PathVariable(name = "id") Long id) {
-        return gameRepository.findById(id).orElseThrow();
-    }
-
-    // Games
-    // Players
     // Admins
     // Questions
     // Rounds
