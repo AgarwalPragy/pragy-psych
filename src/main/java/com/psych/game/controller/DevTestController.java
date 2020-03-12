@@ -2,7 +2,6 @@ package com.psych.game.controller;
 
 import com.psych.game.model.*;
 import com.psych.game.repositories.*;
-import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/dev-test")
@@ -24,7 +22,13 @@ public class DevTestController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
     private RoundRepository roundRepository;
+    @Autowired
+    private ContentWriterRepository contentWriterRepository;
+    @Autowired
+    private EllenAnswerRepository ellenAnswerRepository;
 
     @GetMapping("/")
     public String hello() {
@@ -33,7 +37,7 @@ public class DevTestController {
 
     @GetMapping("/populate")
     public String populateDB() {
-        for(Player player: playerRepository.findAll()) {
+        for (Player player : playerRepository.findAll()) {
             player.getGames().clear();
             playerRepository.save(player);
         }
@@ -105,10 +109,53 @@ public class DevTestController {
         return userRepository.findById(id).orElseThrow();
     }
 
-    // Admins
-    // Questions
-    // Rounds
-    // ContentWriters
-}
+    @GetMapping("/games")
+    public List<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
 
-// localhost:8080/dev-test/
+    @GetMapping("/game/{id}")
+    public Game getGameById(@PathVariable(name = "id") Long id) {
+        return gameRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/admins")
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
+    }
+
+    @GetMapping("/admin/{id}")
+    public Admin getAdminById(@PathVariable(name = "id") Long id) {
+        return adminRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/rounds")
+    public List<Round> getAllRounds() {
+        return roundRepository.findAll();
+    }
+
+    @GetMapping("/round/{id}")
+    public Round getRoundById(@PathVariable(name = "id") Long id) {
+        return roundRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/contentWriters")
+    public List<ContentWriter> getAllContentWriters() {
+        return contentWriterRepository.findAll();
+    }
+
+    @GetMapping("/contentWriter/{id}")
+    public ContentWriter getContentWriterById(@PathVariable(name = "id") Long id) {
+        return contentWriterRepository.findById(id).orElseThrow();
+    }
+
+    @GetMapping("/ellenAnswers")
+    public List<EllenAnswer> getAllEllenAnswers() {
+        return ellenAnswerRepository.findAll();
+    }
+
+    @GetMapping("/ellenAnswer/{id}")
+    public EllenAnswer getEllenAnswerById(@PathVariable(name = "id") Long id) {
+        return ellenAnswerRepository.findById(id).orElseThrow();
+    }
+}

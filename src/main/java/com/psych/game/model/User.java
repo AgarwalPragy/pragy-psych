@@ -33,7 +33,8 @@ public abstract class User extends Auditable {
     @Setter
     Set<Role> roles = new HashSet<>();
 
-    public User() {}
+    public User() {
+    }
 
     public User(User user) { // copy constructor
         email = user.getEmail();

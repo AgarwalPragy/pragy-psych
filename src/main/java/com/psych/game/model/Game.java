@@ -1,7 +1,7 @@
 package com.psych.game.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.psych.game.Utils;
 import com.psych.game.exceptions.InvalidGameActionException;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Game extends Auditable {
     private GameMode gameMode;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     @Getter
     @Setter
     private List<Round> rounds = new ArrayList<>();
@@ -41,14 +41,14 @@ public class Game extends Auditable {
     private Boolean hasEllen = false;
 
     @NotNull
-    @JsonIgnore
+    @JsonIdentityReference
     @Getter
     @Setter
     @ManyToOne
     private Player leader;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     @Getter
     @Setter
     private Map<Player, Stat> playerStats = new HashMap<>();
@@ -59,7 +59,7 @@ public class Game extends Auditable {
     private GameStatus gameStatus = GameStatus.PLAYERS_JOINING;
 
     @ManyToMany
-    @JsonIgnore
+    @JsonIdentityReference
     @Getter
     @Setter
     private Set<Player> readyPlayers = new HashSet<>();
@@ -90,6 +90,10 @@ public class Game extends Auditable {
     }
 
     public void startGame(Player player) throws InvalidGameActionException {
+        if (!gameStatus.equals(GameStatus.PLAYERS_JOINING))
+            throw new InvalidGameActionException("The game has already started");
+        if (players.size() < 2)
+            throw new InvalidGameActionException("Can't start a game with a single player");
         if (!player.equals(leader))
             throw new InvalidGameActionException("Only the leader can start the game");
         startNewRound();
