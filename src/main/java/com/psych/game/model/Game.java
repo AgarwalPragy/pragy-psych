@@ -6,6 +6,8 @@ import com.psych.game.Utils;
 import com.psych.game.exceptions.InvalidGameActionException;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,13 +22,15 @@ public class Game extends Auditable {
     @Setter
     private Set<Player> players = new HashSet<>();
 
+    @ManyToOne
+    @JsonIdentityReference
     @Getter
     @Setter
-    @Enumerated(EnumType.STRING)
     @NotNull
     private GameMode gameMode;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OrderBy(value = "round_number asc")
     @JsonManagedReference
     @Getter
     @Setter
@@ -72,19 +76,25 @@ public class Game extends Auditable {
         this.numRounds = numRounds;
         this.hasEllen = hasEllen;
         this.leader = leader;
-        this.players.add(leader);
+        try {
+            addPlayer(leader);
+        } catch (InvalidGameActionException ignored) {
+        }
     }
 
     public void addPlayer(Player player) throws InvalidGameActionException {
         if (!gameStatus.equals(GameStatus.PLAYERS_JOINING))
             throw new InvalidGameActionException("Can't join after the game has started");
         players.add(player);
+        player.setCurrentGame(this);
     }
 
     public void removePlayer(Player player) throws InvalidGameActionException {
         if (!players.contains(player))
             throw new InvalidGameActionException("No such player was in the game.");
         players.remove(player);
+        if (player.getCurrentGame().equals(this))
+            player.setCurrentGame(null);
         if (players.size() == 0 || (players.size() == 1 && !gameStatus.equals(GameStatus.PLAYERS_JOINING)))
             endGame();
     }
@@ -164,11 +174,24 @@ public class Game extends Auditable {
 
     private void endGame() {
         gameStatus = GameStatus.ENDED;
+        for (Player player : players)
+            if (player.getCurrentGame().equals(this))
+                player.setCurrentGame(null);
     }
 
-    public String getGameState() {
-        // todo
-        return "some string here which will have all the data that the frontend needs";
+    public JSONObject getGameState() {
+        JSONObject state = new JSONObject();
+        state.put("id", getId());
+        state.put("numRounds", numRounds);
+        state.put("mode", gameMode.getName());
+        JSONArray playerData = new JSONArray();
+        for(Player player: players) {
+            JSONObject data = new JSONObject();
+            data.put("alias", player.getAlias());
+            playerData.add(data);
+        }
+        state.put("players", playerData);
+        return state;
     }
 
 }

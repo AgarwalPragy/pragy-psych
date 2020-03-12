@@ -1,5 +1,6 @@
 package com.psych.game.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,8 @@ public class Question extends Auditable {
     @Setter
     private Set<EllenAnswer> ellenAnswers = new HashSet<>();
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JsonIdentityReference
     @NotNull
     @Getter
     @Setter

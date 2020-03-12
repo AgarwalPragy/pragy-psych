@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scaler Academy: Psych!</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .card {
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+            margin: 1em;
+            padding: 1em;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: 200%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="personal">
+        <div class="profile">Profile Info</div>
+        <a href="/logout" class="logout">Logout {{ playerAlias }} </a>
+    </div>
+    <div v-if="currentGame">
+        <div class="section">
+            {{ gameState.id }}
+            {{ gameState.numRounds }}
+            {{ gameState.mode }}
+            {{ gameState }}
+        </div>
+    </div>
+    <div v-else>
+        <div class="section">
+            <div class="heading">Create Game</div>
+            <label for="rounds">Number of Rounds</label>
+            <input type="number" id="rounds" v-model="numRounds">
+
+            <label for="ellen">Has Ellen?</label>
+            <input type="checkbox" id="ellen" v-model="hasEllen">
+            <div class="cards">
+                <div v-for="mode in gameModes"
+                     class="card"
+                     v-on:click="createGame(mode.title)">
+                    <div class="title"> {{ mode.title }}</div>
+                    <img :src="mode.image" alt="">
+                    <div class="description"> {{ mode.description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    window.app = new Vue({
+        el: '#app',
+        data: {
+            playerAlias: "",
+            gameModes: [],
+            hasEllen: false,
+            numRounds: 10,
+            currentGame: null,
+            gameState: {},
+        },
+        methods: {
+            createGame: function (mode) {
+                fetch('/play/create-game?' + new URLSearchParams({
+                    mode: mode,
+                    rounds: this.numRounds,
+                    ellen: this.hasEllen
+                })).then(this.updateDataFromResponse);
+            },
+
+            updateDataFromResponse: function (response) {
+                let self = this;
+                response.json().then(function (data) {
+                    console.log(data);
+                    for (let key in data) {
+                        self[key] = data[key];
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            fetch('/play/').then(this.updateDataFromResponse);
+        }
+    })
+</script>
+</body>
+</html>

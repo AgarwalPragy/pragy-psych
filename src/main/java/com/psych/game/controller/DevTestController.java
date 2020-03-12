@@ -20,6 +20,8 @@ public class DevTestController {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
+    private GameModeRepository gameModeRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private AdminRepository adminRepository;
@@ -39,27 +41,35 @@ public class DevTestController {
     public String populateDB() {
         for (Player player : playerRepository.findAll()) {
             player.getGames().clear();
+            player.setCurrentGame(null);
             playerRepository.save(player);
         }
         gameRepository.deleteAll();
         playerRepository.deleteAll();
         questionRepository.deleteAll();
+        gameModeRepository.deleteAll();
 
         Player luffy = new Player.Builder()
                 .alias("Monkey D. Luffy")
-                .email("luffy@interviewbit.com")
+                .email("luffy@psych.com")
                 .saltedHashedPassword("strawhat")
                 .build();
         playerRepository.save(luffy);
         Player robin = new Player.Builder()
                 .alias("Nico Robin")
-                .email("robin@interviewbit.com")
+                .email("robin@psych.com")
                 .saltedHashedPassword("poneglyph")
                 .build();
         playerRepository.save(robin);
 
+        GameMode isThisAFact = new GameMode("Is This A Fact?", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "is this a fact description");
+        gameModeRepository.save(isThisAFact);
+        gameModeRepository.save(new GameMode("Word Up", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "word up description"));
+        gameModeRepository.save(new GameMode("Un-Scramble", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "unscramble descirption"));
+        gameModeRepository.save(new GameMode("Movie Buff", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "movie buff description"));
+
         Game game = new Game();
-        game.setGameMode(GameMode.IS_THIS_A_FACT);
+        game.setGameMode(isThisAFact);
         game.setLeader(luffy);
         game.getPlayers().add(luffy);
         gameRepository.save(game);
@@ -67,13 +77,13 @@ public class DevTestController {
         questionRepository.save(new Question(
                 "What is the most important Poneglyph",
                 "Rio Poneglyph",
-                GameMode.IS_THIS_A_FACT
+                isThisAFact
         ));
 
         questionRepository.save(new Question(
                 "How far can Luffy stretch?",
                 "56 Gomu Gomus",
-                GameMode.IS_THIS_A_FACT
+                isThisAFact
         ));
 
         return "populated";
