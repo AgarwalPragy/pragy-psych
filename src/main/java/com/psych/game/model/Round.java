@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.psych.game.exceptions.InvalidGameActionException;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -62,12 +63,19 @@ public class Round extends Auditable {
     }
 
     public void submitAnswer(Player player, String answer) throws InvalidGameActionException {
-        if (submittedAnswers.containsKey(player))
-            throw new InvalidGameActionException("Player has already submitted an answer for this round");
-        for (PlayerAnswer existingAnswer : submittedAnswers.values())
-            if (answer.equals(existingAnswer.getAnswer()))
-                throw new InvalidGameActionException("Duplicate Answer!");
-        submittedAnswers.put(player, new PlayerAnswer(this, player, answer));
+        synchronized (this.getId()) {
+            if (submittedAnswers.containsKey(player))
+                throw new InvalidGameActionException("Player has already submitted an answer for this round");
+            for (PlayerAnswer existingAnswer : submittedAnswers.values())
+                if (answer.equals(existingAnswer.getAnswer()))
+                    throw new InvalidGameActionException("Duplicate Answer!");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            submittedAnswers.put(player, new PlayerAnswer(this, player, answer));
+        }
     }
 
     public boolean allAnswersSubmitted(int numPlayers) {
