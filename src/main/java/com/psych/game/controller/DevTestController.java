@@ -62,11 +62,11 @@ public class DevTestController {
                 .build();
         playerRepository.save(robin);
 
-        GameMode isThisAFact = new GameMode("Is This A Fact?", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "is this a fact description");
+        GameMode isThisAFact = new GameMode("Is This A Fact?", "/images/is_that_a_fact.png", "is this a fact description");
         gameModeRepository.save(isThisAFact);
-        gameModeRepository.save(new GameMode("Word Up", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "word up description"));
-        gameModeRepository.save(new GameMode("Un-Scramble", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "unscramble descirption"));
-        gameModeRepository.save(new GameMode("Movie Buff", "https://i.pinimg.com/originals/29/cb/75/29cb75e488831ba018fe5f0925b8e39f.png", "movie buff description"));
+        gameModeRepository.save(new GameMode("Movie Buff", "/images/movie_buff.jpeg", "These movie titles all belong to very real movies. Make up your own plot and win a point for every player you psych into thinking your plot is the correct one. Then try to pick the real movie plot!"));
+        gameModeRepository.save(new GameMode("Word Up", "/images/word_up.jpeg", "word up description"));
+        gameModeRepository.save(new GameMode("Un-Scramble", "/images/unscramble.jpeg", "unscramble descirption"));
 
         Game game = new Game();
         game.setGameMode(isThisAFact);

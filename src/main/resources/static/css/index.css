@@ -1,0 +1,126 @@
+
+* {
+    box-sizing: border-box;
+    min-height: 0;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+body {
+    width: 1000px;
+    height: calc(100vh - 2em);
+    margin: 1em auto;
+    padding: 1em;
+    border: 1px solid black;
+    border-radius: 1em;
+    color: #222;
+    font-family: 'Open Sans', sans-serif;
+}
+
+hr {
+    width: 60%;
+    margin: 1em auto;
+    border: 0;
+    border-bottom: 1px solid black;
+}
+
+.personal {
+    width: fit-content;
+    margin: auto;
+    padding: 0.5em;
+}
+
+.personal a {
+    display: inline-block;
+    padding: 0.5em;
+    margin: 0 1em;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.personal a:hover {
+    background: #ddd;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.section {
+    font-size: 1.2rem;
+    margin-top: 1em;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+}
+
+.section label, .section input {
+    padding: 0.5em;
+    margin: 1.5em;
+}
+
+.section label {
+    margin-right: 0;
+}
+
+.section input {
+    margin-left: 0;
+}
+
+.heading {
+    font-size: 1.8rem;
+}
+
+.modes {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.modes::-webkit-scrollbar {
+    display: none;
+}
+
+.card {
+    white-space: normal;
+    display: inline-block;
+    width: 250px;
+    height: 250px;
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+    margin: 1em;
+}
+
+.card img {
+    width: 250px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.title {
+    width: 100%;
+    padding: 2px;
+    font-size: 1.8rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    background: RGBA(255, 255, 255, 0.5);
+}
+
+.card:hover .description {
+    display: block;
+}
+
+.description {
+    display: none;
+    height: 100%;
+    backdrop-filter: blur(8px);
+    background: RGBA(255, 255, 255, 0.5);
+    padding: 1em;
+    border-top: 1px solid black;
+    font-size: 1.1rem;
+    
+}

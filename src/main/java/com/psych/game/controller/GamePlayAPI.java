@@ -33,19 +33,20 @@ public class GamePlayAPI {
         Game currentGame = player.getCurrentGame();
         JSONObject response = new JSONObject();
         response.put("playerAlias", player.getAlias());
-        response.put("currentGame", currentGame==null?null:currentGame.getId());
-        if(currentGame==null) {
+        String displayScreen = "home";
+
+        response.put("currentGame", currentGame == null ? null : currentGame.getId());
+        if (currentGame == null) { // todo remove
             JSONArray gameModes = new JSONArray();
             for (GameMode mode : gameModeRepository.findAll()) {
                 JSONObject gameMode = new JSONObject();
                 gameMode.put("title", mode.getName());
                 gameMode.put("image", mode.getPicture());
-                gameMode.put("descrption", mode.getDescription());
+                gameMode.put("description", mode.getDescription());
                 gameModes.add(gameMode);
             }
             response.put("gameModes", gameModes);
-        }
-        else {
+        } else {
             response.put("gameState", currentGame.getGameState());
         }
         return response;
@@ -59,9 +60,9 @@ public class GamePlayAPI {
 
     @GetMapping("/create-game")
     public JSONObject createGame(Authentication authentication,
-                           @RequestParam(name = "mode") String gameMode,
-                           @RequestParam(name = "rounds") Integer numRounds,
-                           @RequestParam(name = "ellen") Boolean hasEllen) {
+                                 @RequestParam(name = "mode") String gameMode,
+                                 @RequestParam(name = "rounds") Integer numRounds,
+                                 @RequestParam(name = "ellen") Boolean hasEllen) {
         Player leader = getCurrentPlayer(authentication);
         GameMode mode = gameModeRepository.findByName(gameMode).orElseThrow();
         gameRepository.save(new Game(mode, numRounds, hasEllen, leader));
