@@ -8,10 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    // jpa provides its own query language - abstracts out the differences
-    // JPA - ORM, so we can code DB stuff in java
-    // abstracts out the differences b/w DB backends
-    // todo
-    @Query(value = "SELECT * FROM questions WHERE gameMode=:gameMode ORDER BY RAND() LIMIT 1", nativeQuery = true)
-    Question getRandomQuestion(GameMode gameMode);
+    // JPA -> db agnostic
+    // native -> PostGres
+    @Query(value = "SELECT * FROM questions WHERE game_mode_id=:gameModeId ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    Question getRandomQuestion(Long gameModeId);
 }

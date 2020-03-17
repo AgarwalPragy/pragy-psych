@@ -115,7 +115,7 @@ public class Game extends Auditable {
         Round round = new Round(this, question, rounds.size() + 1);
         if (hasEllen)
             round.setEllenAnswer(Utils.getRandomEllenAnswer(question));
-        rounds.add(new Round());
+        rounds.add(round);
     }
 
     public void submitAnswer(Player player, String answer) throws InvalidGameActionException {

@@ -1,11 +1,13 @@
 package com.psych.game.controller;
 
+import com.psych.game.exceptions.InvalidGameActionException;
 import com.psych.game.model.Game;
 import com.psych.game.model.GameMode;
 import com.psych.game.model.Player;
 import com.psych.game.repositories.GameModeRepository;
 import com.psych.game.repositories.GameRepository;
 import com.psych.game.repositories.PlayerRepository;
+import lombok.Getter;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +69,23 @@ public class GamePlayAPI {
         GameMode mode = gameModeRepository.findByName(gameMode).orElseThrow();
         gameRepository.save(new Game(mode, numRounds, hasEllen, leader));
         return getData(leader);
+    }
+
+    @GetMapping("/luffy-submit")
+    public String luffySubmit() throws InvalidGameActionException {
+        Player luffy = playerRepository.findByEmail("luffy@psych.com").orElseThrow();
+        Game game = luffy.getCurrentGame();
+        game.submitAnswer(luffy, "answer");
+        gameRepository.save(game);
+        return "done";
+    }
+
+    @GetMapping("/robin-submit")
+    public String robinSubmit() throws InvalidGameActionException {
+        Player robin = playerRepository.findByEmail("robin@psych.com").orElseThrow();
+        Game game = robin.getCurrentGame();
+        game.submitAnswer(robin, "answer");
+        gameRepository.save(game);
+        return "done";
     }
 }

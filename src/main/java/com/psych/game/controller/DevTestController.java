@@ -1,5 +1,9 @@
 package com.psych.game.controller;
 
+import com.psych.game.Constants;
+import com.psych.game.Pair;
+import com.psych.game.Utils;
+import com.psych.game.exceptions.InvalidGameActionException;
 import com.psych.game.model.*;
 import com.psych.game.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dev-test")
@@ -38,7 +44,7 @@ public class DevTestController {
     }
 
     @GetMapping("/populate")
-    public String populateDB() {
+    public String populateDB() throws InvalidGameActionException {
         for (Player player : playerRepository.findAll()) {
             player.getGames().clear();
             player.setCurrentGame(null);
@@ -68,23 +74,21 @@ public class DevTestController {
         gameModeRepository.save(new GameMode("Word Up", "/images/word_up.jpeg", "word up description"));
         gameModeRepository.save(new GameMode("Un-Scramble", "/images/unscramble.jpeg", "unscramble descirption"));
 
-        Game game = new Game();
-        game.setGameMode(isThisAFact);
-        game.setLeader(luffy);
-        game.getPlayers().add(luffy);
+        List<Question> questions = new ArrayList<>();
+        for (Map.Entry<String, String> fileMode : Constants.QA_FILES.entrySet()) {
+            GameMode gameMode = gameModeRepository.findByName(fileMode.getValue()).orElseThrow();
+            for (Pair<String, String> questionAnswer : Utils.readQAFile(fileMode.getKey())) {
+                questions.add(new Question(questionAnswer.getFirst(), questionAnswer.getSecond(), gameMode));
+            }
+        }
+        questionRepository.saveAll(questions);
+
+        Game game = new Game(isThisAFact, 15, true, luffy);
+        game.addPlayer(robin);
         gameRepository.save(game);
 
-        questionRepository.save(new Question(
-                "What is the most important Poneglyph",
-                "Rio Poneglyph",
-                isThisAFact
-        ));
-
-        questionRepository.save(new Question(
-                "How far can Luffy stretch?",
-                "56 Gomu Gomus",
-                isThisAFact
-        ));
+        game.startGame(luffy);
+        gameRepository.save(game);
 
         return "populated";
     }
