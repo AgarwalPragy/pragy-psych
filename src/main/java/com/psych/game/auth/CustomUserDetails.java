@@ -29,8 +29,6 @@ public class CustomUserDetails extends User implements UserDetails {
     @Override
     public String getPassword() {
         return super.getSaltedHashedPassword();
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        return encoder.encode(super.getSaltedHashedPassword());
     }
 
     @Override

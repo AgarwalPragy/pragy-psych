@@ -6,7 +6,6 @@ import com.psych.game.Utils;
 import com.psych.game.exceptions.InvalidGameActionException;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
@@ -174,24 +173,30 @@ public class Game extends Auditable {
 
     private void endGame() {
         gameStatus = GameStatus.ENDED;
-        for (Player player : players)
+        for (Player player : players) {
             if (player.getCurrentGame().equals(this))
                 player.setCurrentGame(null);
-    }
-
-    public JSONObject getGameState() {
-        JSONObject state = new JSONObject();
-        state.put("id", getId());
-        state.put("numRounds", numRounds);
-        state.put("mode", gameMode.getName());
-        JSONArray playerData = new JSONArray();
-        for(Player player: players) {
-            JSONObject data = new JSONObject();
-            data.put("alias", player.getAlias());
-            playerData.add(data);
+            Stat oldPlayerStats = player.getStat();
+            Stat deltaPlayerStats = playerStats.get(player);
+            oldPlayerStats.setCorrectAnswerCount(oldPlayerStats.getCorrectAnswerCount() + deltaPlayerStats.getCorrectAnswerCount());
+            oldPlayerStats.setGotPsychedCount(oldPlayerStats.getGotPsychedCount() + deltaPlayerStats.getGotPsychedCount());
+            oldPlayerStats.setPsychedOthersCount(oldPlayerStats.getPsychedOthersCount() + deltaPlayerStats.getPsychedOthersCount());
         }
-        state.put("players", playerData);
-        return state;
     }
 
+    public void endGame(Player player) throws InvalidGameActionException {
+        if (gameStatus.equals(GameStatus.ENDED))
+            throw new InvalidGameActionException("The game has already ended");
+        if (!player.equals(leader))
+            throw new InvalidGameActionException("Only the leader can end the game");
+        endGame();
+    }
+
+    public JSONObject getRoundData() throws InvalidGameActionException {
+        return getCurrentRound().getRoundData();
+    }
+
+    public String getSecretCode() {
+        return Utils.getSecretCodeFromGameId(getId());
+    }
 }

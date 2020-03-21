@@ -64,7 +64,7 @@ public class Utils {
             code = code + " " + wordsList.get((int) (id % base));
             id /= base;
         }
-        return code.substring(0, code.length() - 1);
+        return code.strip();
     }
 
     public static Long getGameIdFromSecretCode(String code) {

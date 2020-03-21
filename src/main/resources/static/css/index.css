@@ -9,14 +9,21 @@
 }
 
 body {
-    width: 1000px;
-    height: calc(100vh - 2em);
     margin: 1em auto;
+    width: 1000px;
+    min-height: calc(100vh - 2em);
+    color: #222;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#app {
+    width: 1000px;
+    min-height: calc(100vh - 2em);
     padding: 1em;
     border: 1px solid black;
     border-radius: 1em;
-    color: #222;
-    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 hr {
@@ -26,13 +33,17 @@ hr {
     border-bottom: 1px solid black;
 }
 
-.personal {
+.invisible {
+    visibility: hidden;
+}
+
+.nav {
     width: fit-content;
     margin: auto;
     padding: 0.5em;
 }
 
-.personal a {
+.button {
     display: inline-block;
     padding: 0.5em;
     margin: 0 1em;
@@ -42,10 +53,19 @@ hr {
     border: 1px solid transparent;
 }
 
-.personal a:hover {
-    background: #ddd;
+.button:hover {
     border: 1px solid black;
     border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.error {
+    color: red;
+    text-align: center;
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    width: 100%;
 }
 
 .section {
@@ -91,10 +111,14 @@ hr {
     overflow: hidden;
     position: relative;
     margin: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .card img {
     width: 250px;
+    height: 250px;
+    object-fit: cover;
     position: absolute;
     top: 0;
     left: 0;
@@ -121,6 +145,82 @@ hr {
     background: RGBA(255, 255, 255, 0.5);
     padding: 1em;
     border-top: 1px solid black;
-    font-size: 1.1rem;
-    
+    font-size: 1rem;
+}
+
+.profile {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 1em;
+}
+
+.profile-row {
+    display: flex;
+    align-items:center;
+    height: 120px;
+    width: 80%;
+    margin: auto;
+    position: relative;
+}
+.profile-row label {
+    margin: 1em;
+}
+.profile-row input {
+    width: 400px;
+    height: 2rem;
+    position: absolute;
+    right: 150px;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    right: 1em;
+    object-fit: cover;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.leaderboard {
+    font-size: 1rem;
+    text-align: center;
+    padding: 1em;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items:center;
+    height: 120px;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    text-align: center;
+}
+
+.leaderboard-heading {
+    font-weight: bold;
+}
+
+.leaderboard-row:hover {
+    background: #eee;
+}
+
+.leaderboard-row span {
+    margin: 0.5em;
+    width: 100px;
+}
+
+.leaderboard-row .name {
+    width: 300px;
+}
+
+.leaderboard img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    right: 1em;
+    object-fit: cover;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

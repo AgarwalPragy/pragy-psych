@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.psych.game.exceptions.InvalidGameActionException;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -94,5 +95,9 @@ public class Round extends Auditable {
 
     public boolean allAnswersSelected(int numPlayers) {
         return selectedAnswers.size() == numPlayers;
+    }
+
+    public JSONObject getRoundData() {
+        return null;
     }
 }
